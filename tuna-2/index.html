@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TUNA-2: Pixel Embeddings Beat Vision Encoders</title>
+  <title>Tuna-2: Pixel Embeddings Beat Vision Encoders</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:wght@400;450;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
@@ -261,14 +261,14 @@
   <!-- Navigation -->
   <nav class="nav">
     <div class="nav-inner">
-      <span class="nav-logo">TUNA-2</span>
+      <span class="nav-logo">Tuna-2</span>
     </div>
     <div class="nav-border"></div>
   </nav>
 
   <!-- Hero -->
   <header class="hero fade-in">
-    <h1>TUNA-2: Pixel Embeddings Beat Vision Encoders for Multimodal Understanding and Generation</h1>
+    <h1>Tuna-2: Pixel Embeddings Beat Vision Encoders for Multimodal Understanding and Generation</h1>
     <div class="hero-line"></div>
 
     <div class="authors-block">
@@ -316,7 +316,7 @@
       </a>
       <a href="https://tuna-ai.org/" target="_blank" class="btn btn-outline">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        TUNA
+        Tuna
         <span class="badge-highlight">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
           CVPR'26 Highlight
@@ -330,10 +330,10 @@
     <div class="section-wide">
       <div class="figure fade-in">
         <div class="figure-img arch">
-          <img src="images/teaser.png" alt="TUNA-2 Architecture" />
+          <img src="images/teaser.png" alt="Tuna-2 Architecture" />
         </div>
         <div class="figure-caption">
-          <strong>Figure 1.</strong> Evolution of the TUNA-2 architecture and multimodal performance comparison. We simplify TUNA (Liu et al., 2025) by progressively stripping away its visual encoding components. By removing the VAE, we first derive TUNA-R, a pixel-space UMM that relies solely on a representation encoder. TUNA-2 further streamlines the design by bypassing the representation encoder entirely, utilizing direct patch embedding layers for raw image inputs. TUNA-2 using pixel embeddings outperforms both TUNA-R and TUNA across a diverse suite of multimodal benchmarks.
+          <strong>Figure 1.</strong> Evolution of the Tuna-2 architecture and multimodal performance comparison. We simplify Tuna (Liu et al., 2025) by progressively stripping away its visual encoding components. By removing the VAE, we first derive Tuna-R, a pixel-space UMM that relies solely on a representation encoder. Tuna-2 further streamlines the design by bypassing the representation encoder entirely, utilizing direct patch embedding layers for raw image inputs. Tuna-2 using pixel embeddings outperforms both Tuna-R and Tuna across a diverse suite of multimodal benchmarks.
         </div>
       </div>
     </div>
@@ -343,9 +343,9 @@
   <section id="teaser" class="teaser-section">
     <div class="teaser-wrap">
       <div class="teaser-card fade-in" id="teaser-card">
-        <img src="images/teaser_v3.png" alt="TUNA-2 generates diverse, high-quality images" />
+        <img src="images/teaser_v3.png" alt="Tuna-2 generates diverse, high-quality images" />
         <div class="teaser-caption">
-          <strong>Figure 2.</strong> While being completely encoder-free, TUNA-2 is capable of performing high-fidelity text-to-image generation and image editing.
+          <strong>Figure 2.</strong> While being completely encoder-free, Tuna-2 is capable of performing high-fidelity text-to-image generation and image editing.
         </div>
       </div>
     </div>
@@ -358,7 +358,7 @@
         <span class="section-num">01</span>
         <h2 class="section-title">Abstract</h2>
       </div>
-      <p class="section-body fade-in">Unified multimodal models typically rely on pretrained vision encoders and use separate visual representations for understanding and generation, creating misalignment between the two tasks and preventing fully end-to-end optimization from raw pixels. We introduce <strong>TUNA-2</strong>, a native unified multimodal model that performs visual understanding and generation directly based on pixel embeddings. TUNA-2 drastically simplifies the model architecture by employing simple patch embedding layers to encode visual input, completely discarding the modular vision encoder designs such as the VAE or the representation encoder. Experiments show that TUNA-2 achieves state-of-the-art performance in multimodal benchmarks, demonstrating that unified pixel-space modelling can fully compete with latent-space approaches for high-quality image generation. Moreover, while the encoder-based variant converges faster in early pretraining, TUNA-2's encoder-free design achieves stronger multimodal understanding at scale, particularly on tasks requiring fine-grained visual perception. These results show that pretrained vision encoders are not necessary for multimodal modelling, and end-to-end pixel-space learning offers a scalable path toward stronger visual representations for both generation and perception.</p>
+      <p class="section-body fade-in">Unified multimodal models typically rely on pretrained vision encoders and use separate visual representations for understanding and generation, creating misalignment between the two tasks and preventing fully end-to-end optimization from raw pixels. We introduce <strong>Tuna-2</strong>, a native unified multimodal model that performs visual understanding and generation directly based on pixel embeddings. Tuna-2 drastically simplifies the model architecture by employing simple patch embedding layers to encode visual input, completely discarding the modular vision encoder designs such as the VAE or the representation encoder. Experiments show that Tuna-2 achieves state-of-the-art performance in multimodal benchmarks, demonstrating that unified pixel-space modelling can fully compete with latent-space approaches for high-quality image generation. Moreover, while the encoder-based variant converges faster in early pretraining, Tuna-2's encoder-free design achieves stronger multimodal understanding at scale, particularly on tasks requiring fine-grained visual perception. These results show that pretrained vision encoders are not necessary for multimodal modelling, and end-to-end pixel-space learning offers a scalable path toward stronger visual representations for both generation and perception.</p>
     </div>
   </section>
 
@@ -373,12 +373,12 @@
         <div class="card fade-in">
           <div class="card-num">01</div>
           <h3 class="card-title">Pixel-Space UMMs</h3>
-          <p class="card-desc">We propose TUNA-2, a family of native unified multimodal models that supports both multimodal understanding and generation directly in pixel space, achieving state-of-the-art performance across a broad range of benchmarks.</p>
+          <p class="card-desc">We propose Tuna-2, a family of native unified multimodal models that supports both multimodal understanding and generation directly in pixel space, achieving state-of-the-art performance across a broad range of benchmarks.</p>
         </div>
         <div class="card fade-in">
           <div class="card-num">02</div>
           <h3 class="card-title">Encoder-Free Surpasses Encoder-Based</h3>
-          <p class="card-desc">With sufficient end-to-end vision pretraining, the encoder-free TUNA-2 consistently outperforms the encoder-based TUNA-R on multimodal understanding, especially on fine-grained, perception-heavy benchmarks&mdash;demonstrating that large-scale pixel-level training can fully replace pretrained vision encoders.</p>
+          <p class="card-desc">With sufficient end-to-end vision pretraining, the encoder-free Tuna-2 consistently outperforms the encoder-based Tuna-R on multimodal understanding, especially on fine-grained, perception-heavy benchmarks&mdash;demonstrating that large-scale pixel-level training can fully replace pretrained vision encoders.</p>
         </div>
         <div class="card fade-in">
           <div class="card-num">03</div>
@@ -401,7 +401,7 @@
       <div class="method-grid">
         <div class="method-item fade-in">
           <h3>Pixel-Space Flow Matching</h3>
-          <p>TUNA-2 discards the VAE module and operates the vision-language backbone and flow matching head entirely in pixel space. We adopt the x-prediction and v-loss paradigm for pixel-space flow matching, employing rectified flow and its linear schedule to construct noisy samples directly in pixel space.</p>
+          <p>Tuna-2 discards the VAE module and operates the vision-language backbone and flow matching head entirely in pixel space. We adopt the x-prediction and v-loss paradigm for pixel-space flow matching, employing rectified flow and its linear schedule to construct noisy samples directly in pixel space.</p>
         </div>
         <div class="method-item fade-in">
           <h3>Masking-Based Feature Learning</h3>
@@ -409,11 +409,11 @@
         </div>
         <div class="method-item fade-in">
           <h3>Three-Stage Training</h3>
-          <p>TUNA-2 is trained using a three-stage strategy: (1) unified representation and flow matching head pretraining, (2) full model continue pretraining with expanded capabilities, and (3) supervised fine-tuning (SFT) for high-quality image generation and instruction following.</p>
+          <p>Tuna-2 is trained using a three-stage strategy: (1) unified representation and flow matching head pretraining, (2) full model continue pretraining with expanded capabilities, and (3) supervised fine-tuning (SFT) for high-quality image generation and instruction following.</p>
         </div>
         <div class="method-item fade-in">
           <h3>Encoder-Free Architecture</h3>
-          <p>TUNA-2 uses simple patch embedding layers to encode input images into vision tokens, offloading the vision-language modelling task purely into the LMM decoder. This eliminates the inductive bias in pretrained representation encoders and simplifies the architecture to a single unified transformer.</p>
+          <p>Tuna-2 uses simple patch embedding layers to encode input images into vision tokens, offloading the vision-language modelling task purely into the LMM decoder. This eliminates the inductive bias in pretrained representation encoders and simplifies the architecture to a single unified transformer.</p>
         </div>
       </div>
     </div>
@@ -427,12 +427,12 @@
         <h2 class="section-title">Benchmark Results</h2>
       </div>
       <p class="section-body fade-in" style="max-width:720px; margin-bottom:32px;">
-        Under a controlled, fair comparison with the same training recipe, the encoder-free TUNA-2 outperforms the encoder-based TUNA-R on the majority of multimodal understanding benchmarks after sufficient vision pretraining, particularly on pixel-centric tasks that demand fine-grained visual perception.
+        Under a controlled, fair comparison with the same training recipe, the encoder-free Tuna-2 outperforms the encoder-based Tuna-R on the majority of multimodal understanding benchmarks after sufficient vision pretraining, particularly on pixel-centric tasks that demand fine-grained visual perception.
       </p>
       <div class="bench-figure fade-in">
         <img src="images/table1_ready.png" alt="Table 1: Benchmark comparisons" />
         <div class="figure-caption">
-          <strong>Table 1.</strong> Comparisons between TUNA-2 and baseline models on multimodal understanding benchmarks. Results with model size greater than 13B are grayed. <strong>Bold:</strong> best results among all UMMs. <em>Underline:</em> second-best among all UMMs.
+          <strong>Table 1.</strong> Comparisons between Tuna-2 and baseline models on multimodal understanding benchmarks. Results with model size greater than 13B are grayed. <strong>Bold:</strong> best results among all UMMs. <em>Underline:</em> second-best among all UMMs.
         </div>
       </div>
     </div>
@@ -446,14 +446,14 @@
         <h2 class="section-title">Attention Visualization</h2>
       </div>
       <p class="section-body fade-in" style="max-width:720px; margin-bottom:32px;">
-        Visualization of attention maps across different models reveals that TUNA-2 variants attend more precisely to the relevant visual regions, demonstrating stronger fine-grained visual perception capabilities.
+        Visualization of attention maps across different models reveals that Tuna-2 variants attend more precisely to the relevant visual regions, demonstrating stronger fine-grained visual perception capabilities.
       </p>
       <div class="figure fade-in">
         <div class="figure-img" style="background:#fff;">
           <img src="images/att.png" alt="Attention visualization" />
         </div>
         <div class="figure-caption">
-          <strong>Figure 3.</strong> Attention map visualization for TUNA-R, TUNA-2 and other baseline models, including LLaVA-OneVision-1.5, Qwen2.5-VL, Penguin-VL, and TUNA. Red area denotes high attention scores and blue area denotes low attention scores. TUNA-2 variants demonstrate more focused and accurate attention patterns on the queried visual elements.
+          <strong>Figure 3.</strong> Attention map visualization for Tuna-R, Tuna-2 and other baseline models, including LLaVA-OneVision-1.5, Qwen2.5-VL, Penguin-VL, and Tuna. Red area denotes high attention scores and blue area denotes low attention scores. Tuna-2 variants demonstrate more focused and accurate attention patterns on the queried visual elements.
         </div>
       </div>
     </div>
@@ -474,7 +474,7 @@
           <span class="bibtex-label">BibTeX</span>
         </div>
         <pre>@article{tuna2,
-  title={TUNA-2: Pixel Embeddings Beat Vision Encoders
+  title={Tuna-2: Pixel Embeddings Beat Vision Encoders
          for Multimodal Understanding and Generation},
   author={Liu, Zhiheng and Ren, Weiming and Huang, Xiaoke
           and Chen, Shoufa and Li, Tianhong and Chen, Mengzhao
@@ -493,9 +493,9 @@
     <div class="footer-inner">
       <div class="footer-line"></div>
       <div class="footer-row">
-        <p class="footer-copy">TUNA-2 &middot; 2026</p>
+        <p class="footer-copy">Tuna-2 &middot; 2026</p>
         <div class="footer-links">
-          <a href="https://tuna-ai.org/" target="_blank" class="footer-link">TUNA Project</a>
+          <a href="https://tuna-ai.org/" target="_blank" class="footer-link">Tuna Project</a>
           <a href="#" class="footer-link">arXiv</a>
         </div>
       </div>
