@@ -372,8 +372,8 @@
       <div class="cards-grid">
         <div class="card fade-in">
           <div class="card-num">01</div>
-          <h3 class="card-title">Pixel-Space UMMs</h3>
-          <p class="card-desc">We propose Tuna-2, a family of native unified multimodal models that supports both multimodal understanding and generation directly in pixel space, achieving state-of-the-art performance across a broad range of benchmarks.</p>
+          <h3 class="card-title">Encoder-Free UMMs</h3>
+          <p class="card-desc">We propose \model, a native unified multimodal model that supports multimodal understanding and generation with encoder-free designs, achieving state-of-the-art performance across a wide range of understanding and generation benchmarks.</p>
         </div>
         <div class="card fade-in">
           <div class="card-num">02</div>
@@ -408,8 +408,8 @@
           <p>We introduce a masking-based visual feature learning scheme that randomly selects a subset of image patches and replaces them with a learnable mask token. This creates a harder denoising problem for generation and forces the model to perform multimodal reasoning under partial visual observation for understanding.</p>
         </div>
         <div class="method-item fade-in">
-          <h3>Three-Stage Training</h3>
-          <p>Tuna-2 is trained using a three-stage strategy: (1) unified representation and flow matching head pretraining, (2) full model continue pretraining with expanded capabilities, and (3) supervised fine-tuning (SFT) for high-quality image generation and instruction following.</p>
+          <h3>Two-Stage Training</h3>
+          <p>Tuna-2 is trained using a two-stage, end-to-end strategy: (1) full model pretraining on image captioning and image generation data, and (2) supervised fine-tuning (SFT) for high-quality image generation and instruction following.</p>
         </div>
         <div class="method-item fade-in">
           <h3>Encoder-Free Architecture</h3>
