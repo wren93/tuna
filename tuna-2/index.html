@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TUNA-2: Pixel Embeddings Beat Vision Encoders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:wght@400;450;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #FAF8F5;
+      --bg-card: #FCFBF9;
+      --teal: #0D7377;
+      --text-dark: #1C1A17;
+      --text-body: #3D3A35;
+      --text-muted: #7A756D;
+      --text-light: #9B958C;
+      --border: #E8E4DE;
+      --border-light: #F0ECE6;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Navigation ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(250, 248, 245, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      max-width: 960px; margin: 0 auto; padding: 0 24px;
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--text-dark); }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-link {
+      font-size: 0.875rem; font-weight: 450; color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--teal); }
+    .nav-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; font-size: 0.875rem; font-weight: 500;
+      border-radius: 9999px; border: 1px solid var(--teal); color: var(--teal);
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { background: var(--teal); color: #fff; }
+    .nav-border { height: 1px; background: var(--border); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 140px 24px 64px; text-align: center;
+      max-width: 820px; margin: 0 auto;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.15; color: var(--text-dark); margin-bottom: 24px;
+    }
+    .hero-line { width: 96px; height: 1px; background: var(--teal); margin: 0 auto 40px; }
+
+    /* ── Authors ── */
+    .authors-block { margin-bottom: 24px; }
+    .author-row {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 4px 24px; margin-bottom: 6px;
+    }
+    .author-name {
+      font-weight: 450; font-size: 1rem; color: var(--text-dark);
+      transition: color 0.2s;
+    }
+    a.author-name:hover { color: var(--teal); }
+    .author-star { color: var(--teal); font-size: 0.65em; vertical-align: super; margin-left: 1px; }
+    .author-sup { color: var(--text-muted); font-size: 0.65em; vertical-align: super; margin-left: 2px; }
+
+    .affiliations {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 4px 20px; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .affiliations sup { font-size: 0.75em; }
+    .equal-note { font-size: 0.875rem; color: var(--text-light); margin-bottom: 0; }
+    .equal-note .star { color: var(--teal); }
+
+    /* ── Buttons ── */
+    .btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;
+      transition: all 0.2s; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-outline {
+      background: var(--bg-card); color: var(--text-body);
+      border-color: var(--border);
+    }
+    .btn-outline:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .badge-highlight {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 9999px; font-size: 0.7rem; font-weight: 600;
+      background: #F0E6C8; color: #8B7332; margin-left: 4px; letter-spacing: 0.02em;
+    }
+
+    /* ── Teaser (scroll-expanding) ── */
+    .teaser-section { padding-bottom: 80px; }
+    .teaser-wrap {
+      max-width: 100vw; margin: 0 auto; padding: 0 24px;
+    }
+    .teaser-card {
+      overflow: hidden; background: var(--bg-card);
+      margin: 0 auto;
+      /* initial state set by JS, these are fallbacks */
+      max-width: 480px;
+      border-radius: 28px;
+      box-shadow: 0 4px 20px rgba(28, 26, 23, 0.05);
+      will-change: max-width, border-radius, box-shadow;
+      transition: max-width 0.05s linear, border-radius 0.05s linear;
+    }
+    .teaser-card img { width: 100%; height: auto; display: block; }
+    .teaser-caption {
+      padding: 16px 24px; border-top: 1px solid var(--border-light);
+      font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;
+    }
+    .teaser-caption strong { font-weight: 500; color: var(--text-body); }
+
+    /* ── Sections ── */
+    .section { padding-bottom: 80px; }
+    .section-narrow { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+    .section-wide { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .section-extra-wide { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+
+    .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px; }
+    .section-num {
+      font-family: 'DM Mono', monospace; font-size: 0.875rem;
+      color: var(--teal); letter-spacing: 0.15em;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif; font-size: clamp(1.5rem, 3vw, 1.875rem);
+      color: var(--text-dark);
+    }
+
+    .section-body {
+      font-size: 1.05rem; line-height: 1.85; color: var(--text-body);
+    }
+    .section-body.placeholder { font-style: italic; color: var(--text-muted); }
+
+    /* ── Cards Grid ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .card {
+      padding: 24px; border-radius: 8px; border: 1px solid var(--border-light);
+      background: var(--bg-card); height: 100%;
+    }
+    .card-num {
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      color: var(--teal); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .card-title {
+      font-family: 'DM Serif Display', serif; font-size: 1.125rem;
+      color: var(--text-dark); margin-bottom: 12px;
+    }
+    .card-desc { font-size: 0.875rem; line-height: 1.65; color: var(--text-muted); }
+
+    /* ── Image Figure ── */
+    .figure {
+      border-radius: 8px; overflow: hidden; background: var(--bg-card);
+      box-shadow: 0 4px 40px rgba(28, 26, 23, 0.08);
+    }
+    .figure-img { padding: 16px 24px; }
+    .figure-img.arch { padding: 16px 32px; background: var(--bg); }
+    .figure-img img { width: 100%; height: auto; display: block; }
+    .figure-img.arch img { mix-blend-mode: multiply; }
+    .figure-caption {
+      padding: 16px 24px; border-top: 1px solid var(--border-light);
+      font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;
+    }
+    .figure-caption strong { font-weight: 500; color: var(--text-body); }
+
+    /* ── Benchmark table image ── */
+    .bench-figure { border-radius: 8px; overflow: hidden; background: var(--bg-card); box-shadow: 0 4px 40px rgba(28,26,23,0.08); }
+    .bench-figure img { width: 100%; height: auto; display: block; padding: 12px 24px; }
+
+    /* ── Method Grid ── */
+    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+    .method-item h3 {
+      font-family: 'DM Serif Display', serif; font-size: 1.2rem;
+      color: var(--text-dark); margin-bottom: 16px;
+    }
+    .method-item p { font-size: 0.95rem; line-height: 1.8; color: var(--text-body); }
+
+    /* ── BibTeX ── */
+    .bibtex {
+      border-radius: 8px; overflow: hidden; border: 1px solid var(--border-light);
+      background: #F3F0EB;
+    }
+    .bibtex-header {
+      padding: 12px 20px; border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .bibtex-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .bibtex-dot.r { background: #D4644A; }
+    .bibtex-dot.y { background: #D4B44A; }
+    .bibtex-dot.g { background: #5AAA5A; }
+    .bibtex-label { margin-left: 8px; font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
+    .bibtex pre {
+      padding: 20px; font-family: 'DM Mono', monospace; font-size: 0.8rem;
+      line-height: 1.6; color: var(--text-body); overflow-x: auto; white-space: pre;
+    }
+
+    /* ── Footer ── */
+    .footer { padding-bottom: 48px; }
+    .footer-inner {
+      max-width: 960px; margin: 0 auto; padding: 0 24px;
+    }
+    .footer-line { height: 1px; background: var(--border); margin-bottom: 32px; }
+    .footer-row {
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 16px;
+    }
+    .footer-copy { font-size: 0.875rem; color: var(--text-light); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-link { font-size: 0.875rem; color: var(--text-muted); transition: color 0.2s; }
+    .footer-link:hover { color: var(--teal); }
+
+    /* ── Fade-in animation ── */
+    .fade-in {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── SVG Icons (inline) ── */
+    .icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 120px 16px 48px; }
+      .section-narrow, .section-wide, .section-extra-wide { padding: 0 16px; }
+      .teaser-wrap { padding: 0 16px; }
+      .method-grid { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* scroll-mt for anchor links */
+    [id] { scroll-margin-top: 72px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <span class="nav-logo">TUNA-2</span>
+    </div>
+    <div class="nav-border"></div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero fade-in">
+    <h1>TUNA-2: Pixel Embeddings Beat Vision Encoders for Multimodal Understanding and Generation</h1>
+    <div class="hero-line"></div>
+
+    <div class="authors-block">
+      <!-- Row 1 -->
+      <div class="author-row">
+        <a href="https://johanan528.github.io/" target="_blank" class="author-name">Zhiheng Liu<span class="author-star">*</span><sup class="author-sup">1,2</sup></a>
+        <a href="https://cs.uwaterloo.ca/~w2ren/" target="_blank" class="author-name">Weiming Ren<span class="author-star">*</span><sup class="author-sup">1,3</sup></a>
+        <a href="https://xk-huang.github.io/" target="_blank" class="author-name">Xiaoke Huang<sup class="author-sup">1</sup></a>
+        <a href="https://www.shoufachen.com/" target="_blank" class="author-name">Shoufa Chen<sup class="author-sup">1</sup></a>
+        <a href="https://www.tianhongli.me/" target="_blank" class="author-name">Tianhong Li<sup class="author-sup">1</sup></a>
+      </div>
+      <!-- Row 2 -->
+      <div class="author-row">
+        <a href="https://chenmnz.github.io/" target="_blank" class="author-name">Mengzhao Chen<sup class="author-sup">2</sup></a>
+        <a href="https://yataiji.github.io/" target="_blank" class="author-name">Yatai Ji<sup class="author-sup">2</sup></a>
+        <a href="https://senhe.github.io/" target="_blank" class="author-name">Sen He<sup class="author-sup">1</sup></a>
+        <a href="https://jonasschult.github.io/" target="_blank" class="author-name">Jonas Schult<sup class="author-sup">1</sup></a>
+        <a href="https://www.linkedin.com/in/belindazeng/" target="_blank" class="author-name">Belinda Zeng<sup class="author-sup">1</sup></a>
+      </div>
+      <!-- Row 3 -->
+      <div class="author-row">
+        <a href="https://www.surrey.ac.uk/people/tao-xiang" target="_blank" class="author-name">Tao Xiang<sup class="author-sup">1</sup></a>
+        <a href="https://wenhuchen.github.io/" target="_blank" class="author-name">Wenhu Chen<sup class="author-sup">3</sup></a>
+        <a href="http://luoping.me/" target="_blank" class="author-name">Ping Luo<sup class="author-sup">2</sup></a>
+        <a href="https://www.cs.washington.edu/people/faculty/luke-zettlemoyer/" target="_blank" class="author-name">Luke Zettlemoyer<sup class="author-sup">1</sup></a>
+        <a href="https://yrcong.github.io/" target="_blank" class="author-name">Yuren Cong<sup class="author-sup">1</sup></a>
+      </div>
+    </div>
+
+    <div class="affiliations">
+      <span><sup>1</sup>Meta AI</span>
+      <span><sup>2</sup>The University of Hong Kong</span>
+      <span><sup>3</sup>University of Waterloo</span>
+    </div>
+    <p class="equal-note"><span class="star">*</span> Joint first authors, listed alphabetically by last name</p>
+
+    <div class="btn-row">
+      <a href="#" class="btn btn-primary">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        arXiv Paper
+      </a>
+      <a href="https://github.com/facebookresearch/tuna-2" target="_blank" class="btn btn-outline">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        Code
+      </a>
+      <a href="https://tuna-ai.org/" target="_blank" class="btn btn-outline">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        TUNA
+        <span class="badge-highlight">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          CVPR'26 Highlight
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Architecture (moved to top, no section header) -->
+  <section id="architecture" class="section" style="padding-top: 16px; padding-bottom: 48px;">
+    <div class="section-wide">
+      <div class="figure fade-in">
+        <div class="figure-img arch">
+          <img src="images/teaser.png" alt="TUNA-2 Architecture" />
+        </div>
+        <div class="figure-caption">
+          <strong>Figure 1.</strong> Evolution of the TUNA-2 architecture and multimodal performance comparison. We simplify TUNA (Liu et al., 2025) by progressively stripping away its visual encoding components. By removing the VAE, we first derive TUNA-R, a pixel-space UMM that relies solely on a representation encoder. TUNA-2 further streamlines the design by bypassing the representation encoder entirely, utilizing direct patch embedding layers for raw image inputs. TUNA-2 using pixel embeddings outperforms both TUNA-R and TUNA across a diverse suite of multimodal benchmarks.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Teaser -->
+  <section id="teaser" class="teaser-section">
+    <div class="teaser-wrap">
+      <div class="teaser-card fade-in" id="teaser-card">
+        <img src="images/teaser_v3.png" alt="TUNA-2 generates diverse, high-quality images" />
+        <div class="teaser-caption">
+          <strong>Figure 2.</strong> While being completely encoder-free, TUNA-2 is capable of performing high-fidelity text-to-image generation and image editing.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section id="abstract" class="section">
+    <div class="section-narrow">
+      <div class="section-header fade-in">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Abstract</h2>
+      </div>
+      <p class="section-body fade-in">Unified multimodal models typically rely on pretrained vision encoders and use separate visual representations for understanding and generation, creating misalignment between the two tasks and preventing fully end-to-end optimization from raw pixels. We introduce <strong>TUNA-2</strong>, a native unified multimodal model that performs visual understanding and generation directly based on pixel embeddings. TUNA-2 drastically simplifies the model architecture by employing simple patch embedding layers to encode visual input, completely discarding the modular vision encoder designs such as the VAE or the representation encoder. Experiments show that TUNA-2 achieves state-of-the-art performance in multimodal benchmarks, demonstrating that unified pixel-space modelling can fully compete with latent-space approaches for high-quality image generation. Moreover, while the encoder-based variant converges faster in early pretraining, TUNA-2's encoder-free design achieves stronger multimodal understanding at scale, particularly on tasks requiring fine-grained visual perception. These results show that pretrained vision encoders are not necessary for multimodal modelling, and end-to-end pixel-space learning offers a scalable path toward stronger visual representations for both generation and perception.</p>
+    </div>
+  </section>
+
+  <!-- Key Contributions -->
+  <section class="section">
+    <div class="section-wide">
+      <div class="section-header fade-in">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Key Contributions</h2>
+      </div>
+      <div class="cards-grid">
+        <div class="card fade-in">
+          <div class="card-num">01</div>
+          <h3 class="card-title">Pixel-Space UMMs</h3>
+          <p class="card-desc">We propose TUNA-2, a family of native unified multimodal models that supports both multimodal understanding and generation directly in pixel space, achieving state-of-the-art performance across a broad range of benchmarks.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card-num">02</div>
+          <h3 class="card-title">Encoder-Free Surpasses Encoder-Based</h3>
+          <p class="card-desc">With sufficient end-to-end vision pretraining, the encoder-free TUNA-2 consistently outperforms the encoder-based TUNA-R on multimodal understanding, especially on fine-grained, perception-heavy benchmarks&mdash;demonstrating that large-scale pixel-level training can fully replace pretrained vision encoders.</p>
+        </div>
+        <div class="card fade-in">
+          <div class="card-num">03</div>
+          <h3 class="card-title">Comprehensive Analysis</h3>
+          <p class="card-desc">Through controlled comparison under the same unified framework, we reveal that scaling up vision pretraining is the key to closing and surpassing the gap between encoder-free and encoder-based designs, offering actionable insights for future native unified multimodal models.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture section removed - moved to top -->
+
+  <!-- Method -->
+  <section class="section">
+    <div class="section-wide">
+      <div class="section-header fade-in">
+        <span class="section-num">03</span>
+        <h2 class="section-title">Method</h2>
+      </div>
+      <div class="method-grid">
+        <div class="method-item fade-in">
+          <h3>Pixel-Space Flow Matching</h3>
+          <p>TUNA-2 discards the VAE module and operates the vision-language backbone and flow matching head entirely in pixel space. We adopt the x-prediction and v-loss paradigm for pixel-space flow matching, employing rectified flow and its linear schedule to construct noisy samples directly in pixel space.</p>
+        </div>
+        <div class="method-item fade-in">
+          <h3>Masking-Based Feature Learning</h3>
+          <p>We introduce a masking-based visual feature learning scheme that randomly selects a subset of image patches and replaces them with a learnable mask token. This creates a harder denoising problem for generation and forces the model to perform multimodal reasoning under partial visual observation for understanding.</p>
+        </div>
+        <div class="method-item fade-in">
+          <h3>Three-Stage Training</h3>
+          <p>TUNA-2 is trained using a three-stage strategy: (1) unified representation and flow matching head pretraining, (2) full model continue pretraining with expanded capabilities, and (3) supervised fine-tuning (SFT) for high-quality image generation and instruction following.</p>
+        </div>
+        <div class="method-item fade-in">
+          <h3>Encoder-Free Architecture</h3>
+          <p>TUNA-2 uses simple patch embedding layers to encode input images into vision tokens, offloading the vision-language modelling task purely into the LMM decoder. This eliminates the inductive bias in pretrained representation encoders and simplifies the architecture to a single unified transformer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benchmarks -->
+  <section id="benchmarks" class="section">
+    <div class="section-extra-wide">
+      <div class="section-header fade-in">
+        <span class="section-num">04</span>
+        <h2 class="section-title">Benchmark Results</h2>
+      </div>
+      <p class="section-body fade-in" style="max-width:720px; margin-bottom:32px;">
+        Under a controlled, fair comparison with the same training recipe, the encoder-free TUNA-2 outperforms the encoder-based TUNA-R on the majority of multimodal understanding benchmarks after sufficient vision pretraining, particularly on pixel-centric tasks that demand fine-grained visual perception.
+      </p>
+      <div class="bench-figure fade-in">
+        <img src="images/table1_ready.png" alt="Table 1: Benchmark comparisons" />
+        <div class="figure-caption">
+          <strong>Table 1.</strong> Comparisons between TUNA-2 and baseline models on multimodal understanding benchmarks. Results with model size greater than 13B are grayed. <strong>Bold:</strong> best results among all UMMs. <em>Underline:</em> second-best among all UMMs.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Attention Visualization -->
+  <section id="attention" class="section">
+    <div class="section-extra-wide">
+      <div class="section-header fade-in">
+        <span class="section-num">05</span>
+        <h2 class="section-title">Attention Visualization</h2>
+      </div>
+      <p class="section-body fade-in" style="max-width:720px; margin-bottom:32px;">
+        Visualization of attention maps across different models reveals that TUNA-2 variants attend more precisely to the relevant visual regions, demonstrating stronger fine-grained visual perception capabilities.
+      </p>
+      <div class="figure fade-in">
+        <div class="figure-img" style="background:#fff;">
+          <img src="images/att.png" alt="Attention visualization" />
+        </div>
+        <div class="figure-caption">
+          <strong>Figure 3.</strong> Attention map visualization for TUNA-R, TUNA-2 and other baseline models, including LLaVA-OneVision-1.5, Qwen2.5-VL, Penguin-VL, and TUNA. Red area denotes high attention scores and blue area denotes low attention scores. TUNA-2 variants demonstrate more focused and accurate attention patterns on the queried visual elements.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Citation -->
+  <section class="section">
+    <div class="section-narrow">
+      <div class="section-header fade-in">
+        <span class="section-num">06</span>
+        <h2 class="section-title">Citation</h2>
+      </div>
+      <div class="bibtex fade-in">
+        <div class="bibtex-header">
+          <div class="bibtex-dot r"></div>
+          <div class="bibtex-dot y"></div>
+          <div class="bibtex-dot g"></div>
+          <span class="bibtex-label">BibTeX</span>
+        </div>
+        <pre>@article{tuna2,
+  title={TUNA-2: Pixel Embeddings Beat Vision Encoders
+         for Multimodal Understanding and Generation},
+  author={Liu, Zhiheng and Ren, Weiming and Huang, Xiaoke
+          and Chen, Shoufa and Li, Tianhong and Chen, Mengzhao
+          and Ji, Yatai and He, Sen and Schult, Jonas
+          and Zeng, Belinda and Xiang, Tao and Chen, Wenhu
+          and Luo, Ping and Zettlemoyer, Luke and Cong, Yuren},
+  journal={arXiv preprint},
+  year={2026}
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-line"></div>
+      <div class="footer-row">
+        <p class="footer-copy">TUNA-2 &middot; 2026</p>
+        <div class="footer-links">
+          <a href="https://tuna-ai.org/" target="_blank" class="footer-link">TUNA Project</a>
+          <a href="#" class="footer-link">arXiv</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts: fade-in + teaser scroll expand -->
+  <script>
+    // Fade-in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Teaser scroll-expanding effect: continuous scroll-driven interpolation
+    const teaserCard = document.getElementById('teaser-card');
+    const MIN_WIDTH = 480;   // px - starting small width
+    const MAX_WIDTH = 1600;  // px - fully expanded width (more dramatic)
+    const MIN_RADIUS = 4;    // px - fully expanded border-radius
+    const MAX_RADIUS = 28;   // px - starting border-radius
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function updateTeaser() {
+      if (!teaserCard) return;
+      const rect = teaserCard.getBoundingClientRect();
+      const viewH = window.innerHeight;
+
+      // Define scroll range: start expanding when card top enters bottom of viewport,
+      // fully expanded when card top reaches near the top of viewport (longer scroll range = more obvious effect)
+      const startY = viewH * 1.0;   // card top here = progress 0
+      const endY   = viewH * 0.05;  // card top here = progress 1
+
+      let progress = (startY - rect.top) / (startY - endY);
+      progress = Math.max(0, Math.min(1, progress));
+      progress = easeOutCubic(progress);
+
+      const w = lerp(MIN_WIDTH, MAX_WIDTH, progress);
+      const r = lerp(MAX_RADIUS, MIN_RADIUS, progress);
+      const shadowAlpha = lerp(0.05, 0.18, progress);
+      const shadowBlur = lerp(20, 80, progress);
+
+      teaserCard.style.maxWidth = w + 'px';
+      teaserCard.style.borderRadius = r + 'px';
+      teaserCard.style.boxShadow = '0 ' + lerp(4, 12, progress) + 'px ' + shadowBlur + 'px rgba(28, 26, 23, ' + shadowAlpha.toFixed(3) + ')';
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          updateTeaser();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+    updateTeaser();
+  </script>
+
+</body>
+</html>
